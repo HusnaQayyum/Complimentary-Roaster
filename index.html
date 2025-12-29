@@ -3,423 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Persona Generator</title>
+    <title>Husna Qayyum - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Professional Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Fonts: Inter for UI -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons: Lucide (Professional replacement for emojis) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 
-    <style>
-        :root {
-            /* Palette */
-            --roast-primary: #f43f5e;
-            --roast-secondary: #e11d48;
-            --compliment-primary: #8b5cf6;
-            --compliment-secondary: #7c3aed;
-            
-            --bg-dark: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7); /* Translucent */
-            --border-color: rgba(255, 255, 255, 0.1);
-            
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            
-            --radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            /* Abstract professional background */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-
-        /* Main Card */
-        .container {
-            background-color: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 2.5rem;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 480px;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .icon-wrapper {
-            display: inline-flex;
-            padding: 12px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            margin-bottom: 1rem;
-            transition: var(--transition);
-        }
-
-        h2 {
-            font-weight: 700;
-            font-size: 1.75rem;
-            margin: 0;
-            letter-spacing: -0.025em;
-        }
-
-        .subtitle {
-            color: var(--text-sub);
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
-            line-height: 1.5;
-        }
-
-        /* Form Elements */
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-sub);
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border-color);
-            background-color: rgba(15, 23, 42, 0.6);
-            color: white;
-            font-size: 1rem;
-            font-family: inherit;
-            outline: none;
-            box-sizing: border-box;
-            transition: var(--transition);
-        }
-
-        input:hover, select:hover {
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        /* Button Styling */
-        button#gen-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: var(--radius);
-            border: none;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            transition: var(--transition);
-            margin-top: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        button#gen-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        }
-
-        button#gen-btn:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        /* Result Area */
-        .result-container {
-            margin-top: 2rem;
-            background-color: rgba(15, 23, 42, 0.4);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            opacity: 0;
-            transform: translateY(10px);
-            display: none; /* Hidden strictly until needed */
-            transition: all 0.5s ease;
-            text-align: left;
-            position: relative;
-        }
-
-        .result-container.visible {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .result-text {
-            font-size: 1.05rem;
-            line-height: 1.6;
-            color: #e2e8f0;
-            margin: 0;
-            padding-right: 20px;
-        }
-
-        /* Copy Button */
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: transparent;
-            border: none;
-            color: var(--text-sub);
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 6px;
-            transition: var(--transition);
-        }
-        .copy-btn:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
-        }
-
-        /* Footer */
-        .footer {
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: var(--text-sub);
-            text-align: center;
-        }
-        .footer a {
-            color: var(--text-sub);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--text-sub);
-        }
-        .footer a:hover {
-            color: white;
-            border-bottom-color: white;
-        }
-
-        /* --- Theme Specifics --- */
-        
-        /* Roast Theme */
-        body.mode-roast .theme-icon { color: var(--roast-primary); }
-        body.mode-roast input:focus, body.mode-roast select:focus {
-            border-color: var(--roast-primary);
-            box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.2);
-        }
-        body.mode-roast #gen-btn {
-            background: linear-gradient(135deg, var(--roast-primary), var(--roast-secondary));
-        }
-
-        /* Compliment Theme */
-        body.mode-compliment .theme-icon { color: var(--compliment-primary); }
-        body.mode-compliment input:focus, body.mode-compliment select:focus {
-            border-color: var(--compliment-primary);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-        }
-        body.mode-compliment #gen-btn {
-            background: linear-gradient(135deg, var(--compliment-primary), var(--compliment-secondary));
-        }
-
-        /* Error Animation */
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            border-color: #ef4444 !important;
-        }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        /* Spinner */
-        .spinner {
-            display: none;
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-    </style>
 </head>
-<body class="mode-roast">
+<body>
 
-    <div class="container">
-        <header>
-            <div class="icon-wrapper">
-                <!-- Icon changes based on mode -->
-                <i id="header-icon" data-lucide="flame" class="theme-icon" width="32" height="32"></i>
-            </div>
-            <h2 id="header-title">AI Roast Generator</h2>
-            <p class="subtitle">Enter a name or a habit to analyze.</p>
-        </header>
-
-        <div class="form-group">
-            <label for="text">Subject</label>
-            <div class="input-wrapper">
-                <input id="text" type="text" placeholder="e.g. Anu's coding skills" autocomplete="off" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="mode">Tone</label>
-            <div class="input-wrapper">
-                <select id="mode" onchange="updateTheme()">
-                    <option value="roast">Roast Mode</option>
-                    <option value="compliment">Compliment Mode</option>
-                </select>
-            </div>
-        </div>
-
-        <button id="gen-btn" onclick="generate()">
-            <span id="btn-text">Roast Them</span>
-            <i id="btn-icon" data-lucide="zap" width="18" height="18"></i>
-            <div class="spinner" id="spinner"></div>
-        </button>
-
-        <div id="result-container" class="result-container">
-            <button class="copy-btn" onclick="copyResult()" title="Copy to clipboard">
-                <i data-lucide="copy" width="16" height="16"></i>
-            </button>
-            <p id="result" class="result-text"></p>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
         </div>
     </div>
 
-    <div class="footer">
-        <!-- Add your GitHub link here -->
-        <p>Built with AI • <a href="https://github.com/yourusername" target="_blank">View on GitHub</a></p>
-    </div>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
 
-    <script>
-        // Initialize Icons
-        lucide.createIcons();
-
-        function updateTheme() {
-            const mode = document.getElementById("mode").value;
-            const body = document.body;
-            const title = document.getElementById("header-title");
-            const btnText = document.getElementById("btn-text");
-            const headerIcon = document.getElementById("header-icon");
-            
-            // Remove previous classes
-            body.classList.remove("mode-roast", "mode-compliment");
-            
-            if (mode === "roast") {
-                body.classList.add("mode-roast");
-                title.innerText = "AI Roast Generator";
-                btnText.innerText = "Roast Them";
-                // Change icon to Flame
-                headerIcon.setAttribute("data-lucide", "flame");
-            } else {
-                body.classList.add("mode-compliment");
-                title.innerText = "AI Compliment Generator";
-                btnText.innerText = "Spread Love";
-                // Change icon to Heart
-                headerIcon.setAttribute("data-lucide", "heart");
-            }
-            
-            // Re-render icons after changing attributes
-            lucide.createIcons();
-        }
-
-        function generate() {
-            const textInput = document.getElementById("text");
-            const text = textInput.value.trim();
-            const mode = document.getElementById("mode").value;
-            const resultBox = document.getElementById("result");
-            const resultContainer = document.getElementById("result-container");
-            const btn = document.getElementById("gen-btn");
-            const spinner = document.getElementById("spinner");
-            const btnText = document.getElementById("btn-text");
-            const btnIcon = document.getElementById("btn-icon");
-
-            // Validation
-            if (!text) {
-                textInput.classList.add("shake");
-                textInput.focus();
-                setTimeout(() => textInput.classList.remove("shake"), 500);
-                return;
-            }
-
-            // Loading State
-            btn.disabled = true;
-            spinner.style.display = "block";
-            btnIcon.style.display = "none"; // Hide icon during load
-            btnText.innerText = "Processing...";
-            resultContainer.classList.remove("visible");
-
-            fetch("/generate", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ text, mode })
-            })
-            .then(res => res.json())
-            .then(data => {
-                resultBox.innerText = data.result;
-                resultContainer.classList.add("visible");
-            })
-            .catch(err => {
-                console.error(err);
-                resultBox.innerText = "Connection Error: Is the backend running?";
-                resultContainer.classList.add("visible");
-            })
-            .finally(() => {
-                // Reset Button
-                btn.disabled = false;
-                spinner.style.display = "none";
-                btnIcon.style.display = "block";
-                btnText.innerText = mode === "roast" ? "Roast Them" : "Spread Love";
-            });
-        }
-
-        function copyResult() {
-            const text = document.getElementById("result").innerText;
-            if(!text) return;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                const copyBtn = document.querySelector('.copy-btn');
-                const originalIcon = copyBtn.innerHTML;
+    <!-- Main Content Wrapper -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Husna Qayyum</h1>
+                <p class="tagline">AI/ML Enthusiast • Frontend Developer</p>
+                <p class="subtitle">Computer Science Student at University of Chitral
+                    </p>
                 
-                // Show Check icon temporarily
-                copyBtn.innerHTML = '<i data-lucide="check" width="16" height="16"></i>';
-                lucide.createIcons();
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-folder-open"></i> View My Work
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="fas fa-paper-plane"></i> Get In Touch
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <h2>About Me</h2>
+                    <p>Passionate about creating innovative solutions through technology</p>
+                </div>
                 
-                setTimeout(() => {
-                    copyBtn.innerHTML = '<i data-lucide="copy" width="16" height="16"></i>';
-                    lucide.createIcons();
-                }, 2000);
-            });
-        }
-    </script>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>
+                            Enthusiastic Computer Science undergraduate with a 4.0 GPA, actively pursuing hands-on opportunities in AI, Machine Learning, and Python development. I'm passionate about building user-oriented solutions that make a real difference, particularly in accessibility and communication technologies.
+                        </p>
+                        <p>
+                            Currently developing <strong>SignSpeak</strong>, a gesture recognition system to assist deaf individuals in communication by translating hand gestures into text and voice output. My journey includes meaningful contributions to applications aimed at improving communication for individuals with hearing impairments.
+                        </p>
+                        <p>
+                            I thrive in collaborative environments while maintaining strong individual accountability, constantly striving for excellence in all endeavors. Member of the University Computing Society and volunteer with local educational initiatives promoting tech literacy among youth.
+                        </p>
+                    </div>
+
+                    <div class="about-stats">
+                        <div class="stat-box">
+                            <h3>4.0</h3>
+                            <p>CGPA</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>10+</h3>
+                            <p>Projects</p>
+                        </div>
+                        <div class="stat-box">
+                            <h3>3</h3>
+                            <p>Languages</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Technical Skills</h2>
+                    <p>Expertise across multiple domains of technology</p>
+                </div>
+
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <i class="fas fa-code"></i>
+                            <h3>Programming</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">HTML5</span>
+                            <span class="tag">CSS3</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <i class="fas fa-layer-group"></i>
+                            <h3>Frameworks & Tools</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">VS Code</span>
+                            <span class="tag">GitHub</span>
+                            <span class="tag">Git</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-card">
+                        <div class="skill-header">
+                            <i class="fas fa-brain"></i>
+                            <h3>AI & Machine Learning</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="tag">MediaPipe</span>
+                            <span class="tag">TensorFlow</span>
+                            <span class="tag">Generative AI</span>
+                            <span class="tag">Gesture Recognition</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Featured Projects</h2>
+                    <p>Innovative solutions built with passion and precision</p>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title-row">
+                                <h3><i class="fas fa-hands-asl-interpreting"></i> SignSpeak</h3>
+                                <span class="project-status">In Progress</span>
+                            </div>
+                            <p>A gesture-recognition system to assist deaf individuals in communication by translating hand gestures into text and voice output. Incorporating machine learning principles using MediaPipe and TensorFlow to achieve accurate recognition and response.</p>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title-row">
+                                <h3><i class="fas fa-cube"></i> 3D Visualization</h3>
+                                <span class="project-status completed">Completed</span>
+                            </div>
+                            <p>Created an interactive web application that transforms detected hand gestures into dynamic 3D particle shapes, exploring real-time visual outputs linked to gesture inputs. Built with JavaScript and WebGL for smooth, responsive interactions.</p>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title-row">
+                                <h3><i class="fas fa-gamepad"></i> Compliment & Roast</h3>
+                                <span class="project-status completed">Completed</span>
+                            </div>
+                            <p>Built an engaging web-based game using HTML and JavaScript which provides users with personalized compliments or light-hearted roasts based on input. Designed for fun user engagement with focus on frontend logic and user experience.</p>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <div class="project-title-row">
+                                <h3><i class="fas fa-calculator"></i> Smart Calculator</h3>
+                                <span class="project-status completed">Completed</span>
+                            </div>
+                            <p>Designed a fully functional responsive calculator application emphasizing intuitive user interaction. Conducted iterative testing and refined functionality based on user feedback, applying best practices in frontend development.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Experience</h2>
+                    <p>Professional journey and academic achievements</p>
+                </div>
+
+                <div class="timeline">
+                    <!-- Item 1 (Left) -->
+                    <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>Frontend Development Intern</h3>
+                            <h4>
+                                <a href="https://www.hindukushsoft.com/"> 
+                                    HindukushSoft Technologies</a>
+                               </h4>
+                            <ul>
+                                <li>Crafted responsive user interfaces using React 
+                                    and modern frameworks.</li>
+                                <li>Collaborated in teams to enhance user engagement.
+
+                                </li>
+                                <li>Developed user-centric designs streamlining 
+                                    navigation.</li>
+                                <li>Implemented coding best practices for robustness.
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 (Right) -->
+                    <div class="timeline-item right">
+                        <div class="timeline-content">
+                            <h3>Scientific Writing Bootcamp</h3>
+                            <h4>Current Participation</h4>
+                            <ul>
+                                <li>Focusing on research writing in AI technologies.</li>
+                                <li>Drafting and revising research papers.</li>
+                                <li>Synthesizing complex technical concepts.</li>
+                                <li>Studying ethical issues surrounding AI discourse.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 (Left) -->
+                    <!-- <div class="timeline-item left">
+                        <div class="timeline-content">
+                            <h3>Academic Projects & Research</h3>
+                            <h4>University of Chitral</h4>
+                            <ul>
+                                <li>Executed projects using HTML, CSS, JS.</li>
+                                <li>Applied Agile methodologies with peers.</li>
+                                <li>Researched innovative solutions for outcomes.</li>
+                                <li>Maintained 4.0 GPA while leading initiatives.</li>
+                            </ul>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section fade-in">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Let's Connect</h2>
+                    <p>I'm always open to discussing new opportunities, collaborations, or just having a chat about technology!</p>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <a href="mailto:husnaqayyum99@gmail.com">husnaqayyum99@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                        <h3>LinkedIn</h3>
+                        <a href="https://www.linkedin.com/in/husna-qayyum-42107937b?
+                        utm_source=share&utm_campaign=share_via&utm_content=profile&
+                        utm_medium=android_app" target="_blank">LinkedIn Profile</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fa-brands fa-github"></i>
+                        <h3>GitHub</h3>
+                        <a href="https://github.com/HusnaQayyum" 
+                        target="_blank">GitHub Profile</a>
+                    </div>
+                    <!-- <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <h3>Phone</h3>
+                        <a href="tel:+923468069661">0346-8069661</a>
+                    </div> -->
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Location</h3>
+                        <p>Chitral, Pakistan</p>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="certifications-container">
+                    <h3 class="cert-header"><i class="fas fa-certificate"></i> 
+                        Certifications & Languages</h3>
+                    <div class="cert-badges">
+                        <div class="cert-badge"><i class="fas fa-robot">
+
+                        </i><a href="https://quiz.ideagist.com/ideagist-certificate?
+                        cert_hash=0094f6b90afd2ed5" class="cer" 
+                        target="_blank">Generative AI (2025)
+                    </a></div>
+                        <div class="cert-badge"><i class="fas fa-laptop-code"></i> 
+                           <a href="https://www.hindukushsoft.com/
+                           certificate-verification/?cert_id=HKS-INT-2025-007&
+                           status=verified" class="cer" target="_blank">Frontend Dev (2025)</a> </div>
+                        <div class="cert-badge"><i class="fas fa-language"></i> 
+                            English / Urdu / Khowar</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 <strong>Husna Qayyum</strong>. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+
 </body>
 </html>
